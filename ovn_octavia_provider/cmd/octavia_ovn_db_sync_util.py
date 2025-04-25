@@ -33,19 +33,13 @@ def setup_conf():
         raise
     return conf
 
-
 def main():
-    """Main method for syncing Octavia LBs (OVN provider) with OVN NB DB.
-
-    This script provides a utility for syncing the OVN Northbound Database
-    with the Octavia database.
-
-    """
+    """Main method for syncing Octavia LBs (OVN provider) with OVN NB DB."""
     setup_conf()
     logging.setup(CONF, 'octavia_ovn_db_sync_util')
 
-    # Method can be call like `octavia-ovn-db-sync-util --debug`
-    LOG.info("OVN Octavia DB sync start.")
+    print(">>> Starting OVN Octavia DB sync...")
+
     args = sys.argv[1:]
     lb_filters = {'provider': 'ovn'}
     if '--debug' in args:
@@ -54,6 +48,16 @@ def main():
     else:
         cfg.CONF.set_override('debug', False)
 
-    ovn_driver = driver.OvnProviderDriver()
-    ovn_driver.do_sync(**lb_filters)
-    LOG.info("OVN Octavia DB sync finish.")
+    try:
+        ovn_driver = driver.OvnProviderDriver()
+        print(">>> Calling do_sync() on OvnProviderDriver...")
+        ovn_driver.do_sync(**lb_filters)
+        print(">>> Sync process complete.")
+    except Exception as e:
+        print(f">>> ERROR during sync: {e}")
+        raise
+
+    print(">>> Finished OVN Octavia DB sync.")
+
+if __name__ == "__main__":
+    main()
