@@ -3521,7 +3521,6 @@ class OvnProviderHelper():
         return True
 
     def _update_ip_port_mappings(self, ovn_lb, backend_ip, port_name, src_ip, pool_key, delete=False):
-        print(">>> CUSTOM PATCH IN EFFECT <<<")
         # ip_port_mappings:${MEMBER_IP}=${LSP_NAME_MEMBER}:${HEALTH_SRC}
         # where:
         #  MEMBER_IP: IP of member_lsp
@@ -3530,7 +3529,6 @@ class OvnProviderHelper():
 
 
         if delete:
-            print(">>> CUSTOM PATCH IN EFFECT <<<")
             # Before removing a member from ip_port_mappings, make sure no other
             # pool uses the same member.
             other_members = []
@@ -3559,10 +3557,9 @@ class OvnProviderHelper():
                 self.ovn_nbdb_api.lb_del_ip_port_mapping(
                     ovn_lb.uuid, backend_ip).execute()
         else:
-            self.ovn_nbdb_api.lb_add_ip_port_mapping(ovn_lb.uuid,
-                                                     backend_ip,
-                                                     port_name,
-                                                     src_ip).execute()
+            self.ovn_nbdb_api.lb_add_ip_port_mapping(
+                ovn_lb.uuid, backend_ip, port_name, src_ip, pool_key
+            ).execute()
 
     def _clean_ip_port_mappings(self, ovn_lb, pool_key=None):
         if not pool_key:
