@@ -6760,5 +6760,4 @@ class TestOvnProviderHelper(ovn_base.TestOvnOctaviaBase):
 
         # Assert that lb_add_ip_port_mapping was called
         self.helper.ovn_nbdb_api.lb_add_ip_port_mapping.assert_called_once_with(
-            'test-lb-uuid', '10.0.0.1', 'port1', '192.168.0.1'
-        )
+            'test-lb-uuid', '10.0.0.1', 'port1', '192.168.0.1', 'pool1')
