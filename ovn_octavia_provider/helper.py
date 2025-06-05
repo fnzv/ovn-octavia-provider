@@ -3543,8 +3543,7 @@ class OvnProviderHelper():
             other_members = []
             for k, v in ovn_lb.external_ids.items():
                 if ovn_const.LB_EXT_IDS_POOL_PREFIX in k and k != pool_key:
-                    other_members.extend(self._extract_member_info(
-                        ovn_lb.external_ids[k]))
+                    other_members.extend(self._extract_member_info(v))
             member_statuses = ovn_lb.external_ids.get(
                 ovn_const.OVN_MEMBER_STATUS_KEY)
             try:
@@ -3589,15 +3588,9 @@ class OvnProviderHelper():
                     other_members.extend(self._extract_member_info(
                         ovn_lb.external_ids[k]))
 
-            member_statuses = ovn_lb.external_ids.get(
-                ovn_const.OVN_MEMBER_STATUS_KEY)
-
-            try:
-                member_statuses = jsonutils.loads(member_statuses)
-            except TypeError:
-                LOG.debug("no member status on external_ids: %s",
-                          str(member_statuses))
-                member_statuses = {}
+            member_statuses = jsonutils.loads(
+                ovn_lb.external_ids.get(ovn_const.OVN_MEMBER_STATUS_KEY, '{}')
+            )
 
             for (mb_ip, mb_port, mb_subnet, mb_id) in members_try_remove:
                 delete = True
